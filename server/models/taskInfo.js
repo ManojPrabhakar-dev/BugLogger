@@ -2,11 +2,12 @@ import mongoose from "mongoose";
 
 const taskSchema = mongoose.Schema({
   //   taskID: String,
-  title: String,
-  description: String,
-  creator: String,
+  title: { type: String, required: true },
+  description: { type: String, required: true },
+  creator: { type: String, required: true },
   assignee: { type: String, default: "unassigned" },
-  level: { type: String, default: "Medium" },
+  Priority: { type: String, default: "Medium" },
+  TaskType: { type: String, default: "Task" },
   createdAt: {
     type: Date,
     default: new Date(),
