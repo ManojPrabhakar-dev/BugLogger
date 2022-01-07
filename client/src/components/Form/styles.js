@@ -4,19 +4,28 @@ export default makeStyles((theme) => ({
   paper: {
     padding: theme.spacing(2),
     backgroundColor: theme.palette.secondary,
-    gridRow: "span 4",
+    gridRow: "span 5",
+    // height: "100%",
     margin: "4px",
   },
   form: {
     display: "flex",
-    flexWrap: "wrap",
+    flexDirection: "column",
     justifyContent: "center",
   },
+  item1: { display: "flex", margin: "0.6rem 1rem" },
   fileInput: {
     width: "97%",
     margin: "10px 0",
   },
+  heading: {
+    textAlign: "center",
+  },
   buttonSubmit: {
-    marginBottom: 10,
+    margin: "auto",
+    width: "60%",
+  },
+  mr: {
+    marginRight: "1rem",
   },
 }));
