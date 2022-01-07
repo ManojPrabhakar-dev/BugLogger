@@ -3,15 +3,24 @@ import { makeStyles } from "@material-ui/core/styles";
 export default makeStyles((theme) => ({
   paper: {
     padding: theme.spacing(2),
-    backgroundColor: theme.palette.secondary,
+    backgroundColor: "#fd3",
     gridRow: "span 5",
     // height: "100%",
-    margin: "4px",
-  },
-  form: {
     display: "flex",
     flexDirection: "column",
-    justifyContent: "center",
+    margin: "4px",
+  },
+  span2: {
+    gridRow: "span 2",
+  },
+  span4: {
+    gridRow: "span 4",
+  },
+  form: {
+    backgroundColor: "yellow",
+    display: "grid",
+    gridTemplateRows: "repeat(12,1fr)",
+    height: "100%",
   },
   item1: { display: "flex", margin: "0.6rem 1rem" },
   fileInput: {

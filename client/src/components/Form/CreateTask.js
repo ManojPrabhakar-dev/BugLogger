@@ -14,65 +14,68 @@ const CreateTask = () => {
   const classes = useStyles();
   return (
     <Paper className={`${classes.paper}`}>
-      <form autoComplete="off" noValidate>
-        <Box className={`${classes.form}`}>
-          <Typography variant="h6" className={`${classes.heading}`}>
-            {"Creating Task"}
-          </Typography>
-          <Box className={`${classes.item1}`}>
-            <Box className={`${classes.mr}`} sx={{ flex: 5 }}>
-              <TextField
-                name="title"
-                variant="outlined"
-                label="Title"
-                fullWidth
-                size="small"
-                value={"Title"}
-              />
-            </Box>
-            <Box sx={{ flex: 2 }}>
-              <TextField
-                name="author"
-                variant="outlined"
-                label="author"
-                size="small"
-                fullWidth
-                value={"author"}
-              />
-            </Box>
-          </Box>
-          <Box className={`${classes.item1}`}>
-            <Box className={`${classes.mr}`} sx={{ flex: 5 }}>
-              <TextField
-                name="description"
-                variant="outlined"
-                label="description"
-                size="small"
-                fullWidth
-                value={"Description"}
-              />
-            </Box>
-            <Box sx={{ flex: 2 }}>
-              <TextField
-                name="priority"
-                variant="outlined"
-                label="priority"
-                size="small"
-                fullWidth
-                value={"priority"}
-              />
-            </Box>
-          </Box>
-          <Button
-            className={classes.buttonSubmit}
-            variant="contained"
-            color="primary"
-            size="large"
-            type="submit"
-          >
-            Submit
-          </Button>
-        </Box>
+      <form autoComplete="off" noValidate className={`${classes.form}`}>
+        {/* <Box className={`${classes.form}`}> */}
+        <Typography
+          variant="h6"
+          className={`${classes.heading} ${classes.span2}`}
+        >
+          {"Creating Task"}
+        </Typography>
+        <Grid container spacing={2} className={`${classes.span4}`}>
+          <Grid item xs={9}>
+            <TextField
+              name="title"
+              variant="outlined"
+              label="Title"
+              fullWidth
+              size="small"
+              value={"Title"}
+            />
+          </Grid>
+          <Grid item xs={3}>
+            <TextField
+              name="author"
+              variant="outlined"
+              label="author"
+              size="small"
+              fullWidth
+              value={"author"}
+            />
+          </Grid>
+        </Grid>
+        <Grid container spacing={2} className={`${classes.span4}`}>
+          <Grid item xs={9}>
+            <TextField
+              name="description"
+              variant="outlined"
+              label="description"
+              size="small"
+              fullWidth
+              value={"Description"}
+            />
+          </Grid>
+          <Grid item xs={3}>
+            <TextField
+              name="priority"
+              variant="outlined"
+              label="priority"
+              size="small"
+              fullWidth
+              value={"priority"}
+            />
+          </Grid>
+        </Grid>
+        <Button
+          className={`${classes.buttonSubmit} ${classes.span4}`}
+          variant="contained"
+          color="primary"
+          size="large"
+          type="submit"
+        >
+          Submit
+        </Button>
+        {/* </Box> */}
       </form>
     </Paper>
   );
