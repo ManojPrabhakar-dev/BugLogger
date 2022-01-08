@@ -16,13 +16,10 @@ const CreateTask = () => {
     <Paper className={`${classes.paper}`}>
       <form autoComplete="off" noValidate className={`${classes.form}`}>
         {/* <Box className={`${classes.form}`}> */}
-        <Typography
-          variant="h6"
-          className={`${classes.heading} ${classes.span2}`}
-        >
+        <Typography variant="h6" className={`${classes.heading}`}>
           {"Creating Task"}
         </Typography>
-        <Grid container spacing={2} className={`${classes.span4}`}>
+        <Grid container spacing={2}>
           <Grid item xs={9}>
             <TextField
               name="title"
@@ -44,7 +41,7 @@ const CreateTask = () => {
             />
           </Grid>
         </Grid>
-        <Grid container spacing={2} className={`${classes.span4}`}>
+        <Grid container spacing={2}>
           <Grid item xs={9}>
             <TextField
               name="description"
@@ -67,7 +64,7 @@ const CreateTask = () => {
           </Grid>
         </Grid>
         <Button
-          className={`${classes.buttonSubmit} ${classes.span4}`}
+          className={`${classes.buttonSubmit}`}
           variant="contained"
           color="primary"
           size="large"
