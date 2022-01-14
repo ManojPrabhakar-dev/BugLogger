@@ -1,22 +1,35 @@
 import React from "react";
-import {
-  Container,
-  TextField,
-  Button,
-  Typography,
-  Paper,
-  Box,
-  Grid,
-} from "@material-ui/core";
-import useStyles from "./styles";
+import { TextField, Button, Typography, Paper, Box, Grid } from "@mui/material";
 
 const CreateTask = () => {
-  const classes = useStyles();
   return (
-    <Paper className={`${classes.paper}`}>
-      <form autoComplete="off" noValidate className={`${classes.form}`}>
-        {/* <Box className={`${classes.form}`}> */}
-        <Typography variant="h6" className={`${classes.heading}`}>
+    <Paper
+      sx={{
+        padding: "12px",
+        gridRow: "span 5",
+        margin: "4px",
+        // backgroundColor: "#fd3",
+      }}
+    >
+      <Box
+        component="form"
+        sx={{
+          display: "grid",
+          gridTemplateRows: "repeat(4,1fr)",
+          height: "100%",
+          // backgroundColor: "yellow",
+        }}
+        autoComplete="off"
+        noValidate
+      >
+        <Typography
+          variant="h6"
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           {"Creating Task"}
         </Typography>
         <Grid container spacing={2}>
@@ -64,7 +77,7 @@ const CreateTask = () => {
           </Grid>
         </Grid>
         <Button
-          className={`${classes.buttonSubmit}`}
+          sx={{ margin: "auto", width: "60%" }}
           variant="contained"
           color="primary"
           size="large"
@@ -72,8 +85,7 @@ const CreateTask = () => {
         >
           Submit
         </Button>
-        {/* </Box> */}
-      </form>
+      </Box>
     </Paper>
   );
 };

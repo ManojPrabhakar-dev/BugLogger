@@ -1,10 +1,12 @@
 import React from "react";
-import { Container, Button, Typography, Paper } from "@material-ui/core";
-import useStyles from "./styles";
+import { Paper } from "@mui/material";
 
 const Tasks = () => {
-  const classes = useStyles();
-  return <Paper className={classes.paper}>Task List</Paper>;
+  return (
+    <Paper sx={{ padding: "12px", gridRow: "span 7", margin: "4px" }}>
+      Tasks
+    </Paper>
+  );
 };
 
 export default Tasks;
