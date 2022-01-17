@@ -18,7 +18,7 @@ export const createTask = async (req, res) => {
 
   const newTask = new TaskInfo({
     ...task,
-    creator: req.userId,
+    // creator: req.userId,
     createdAt: new Date().toISOString(),
   });
 

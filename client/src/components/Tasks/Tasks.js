@@ -1,10 +1,16 @@
 import React from "react";
-import { Paper } from "@mui/material";
+import { Paper, CircularProgress, Box } from "@mui/material";
+import { useSelector } from "react-redux";
 
 const Tasks = () => {
-  return (
+  const tasks = useSelector((state) => state.tasks);
+  return !tasks.length ? (
+    <CircularProgress />
+  ) : (
     <Paper sx={{ padding: "12px", gridRow: "span 7", margin: "4px" }}>
-      Tasks
+      {tasks.map((task) => {
+        return <Box>{task}</Box>;
+      })}
     </Paper>
   );
 };

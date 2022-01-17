@@ -1,7 +1,32 @@
-import React from "react";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import { TextField, Button, Typography, Paper, Box, Grid } from "@mui/material";
+import { createTask } from "../../actions/taskAction";
 
 const CreateTask = () => {
+  const dispatch = useDispatch();
+  const [taskInfo, setTaskInfo] = useState({
+    title: "",
+    description: "",
+    creator: "",
+    priority: "",
+  });
+
+  function postTaskInfoSubmit(e) {
+    e.preventDefault();
+    dispatch(createTask(taskInfo));
+    clearState();
+  }
+
+  function clearState() {
+    setTaskInfo({
+      title: "",
+      description: "",
+      creator: "",
+      priority: "",
+    });
+  }
+
   return (
     <Paper
       sx={{
@@ -21,6 +46,7 @@ const CreateTask = () => {
         }}
         autoComplete="off"
         noValidate
+        onSubmit={postTaskInfoSubmit}
       >
         <Typography
           variant="h6"
@@ -40,17 +66,23 @@ const CreateTask = () => {
               label="Title"
               fullWidth
               size="small"
-              value={"Title"}
+              value={taskInfo.title}
+              onChange={(e) => {
+                setTaskInfo({ ...taskInfo, title: e.target.value });
+              }}
             />
           </Grid>
           <Grid item xs={3}>
             <TextField
-              name="author"
+              name="creator"
               variant="outlined"
-              label="author"
+              label="creator"
               size="small"
               fullWidth
-              value={"author"}
+              value={taskInfo.creator}
+              onChange={(e) => {
+                setTaskInfo({ ...taskInfo, creator: e.target.value });
+              }}
             />
           </Grid>
         </Grid>
@@ -62,7 +94,10 @@ const CreateTask = () => {
               label="description"
               size="small"
               fullWidth
-              value={"Description"}
+              value={taskInfo.description}
+              onChange={(e) => {
+                setTaskInfo({ ...taskInfo, description: e.target.value });
+              }}
             />
           </Grid>
           <Grid item xs={3}>
@@ -72,7 +107,10 @@ const CreateTask = () => {
               label="priority"
               size="small"
               fullWidth
-              value={"priority"}
+              value={taskInfo.priority}
+              onChange={(e) => {
+                setTaskInfo({ ...taskInfo, priority: e.target.value });
+              }}
             />
           </Grid>
         </Grid>
