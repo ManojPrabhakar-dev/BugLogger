@@ -9,7 +9,7 @@ const Tasks = () => {
   ) : (
     <Paper sx={{ padding: "12px", gridRow: "span 7", margin: "4px" }}>
       {tasks.map((task) => {
-        return <Box>{task}</Box>;
+        return <Box key={task._id}>{task.title}</Box>;
       })}
     </Paper>
   );
