@@ -1,10 +1,13 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { TextField, Button, Typography, Paper, Box, Grid } from "@mui/material";
-import { createTask } from "../../actions/taskAction";
+import { createTask, updateTask } from "../../actions/taskAction";
 
-const CreateTask = () => {
+const CreateTask = ({ currentIdx, setCurrentIdx }) => {
   const dispatch = useDispatch();
+  const task = useSelector((state) =>
+    currentIdx ? state.tasks.find((task) => task._id === currentIdx) : null
+  );
   const [taskInfo, setTaskInfo] = useState({
     title: "",
     description: "",
@@ -12,9 +15,24 @@ const CreateTask = () => {
     priority: "",
   });
 
+  useEffect(() => {
+    if (task) {
+      setTaskInfo({
+        title: task.title,
+        description: task.description,
+        creator: task.creator,
+        priority: task.priority,
+      });
+    }
+  }, [task]);
+
   function postTaskInfoSubmit(e) {
     e.preventDefault();
-    dispatch(createTask(taskInfo));
+    if (!currentIdx) {
+      dispatch(createTask(taskInfo));
+    } else {
+      dispatch(updateTask(currentIdx, taskInfo));
+    }
     clearState();
   }
 
@@ -25,6 +43,7 @@ const CreateTask = () => {
       creator: "",
       priority: "",
     });
+    setCurrentIdx(0);
   }
 
   return (
@@ -56,7 +75,7 @@ const CreateTask = () => {
             alignItems: "center",
           }}
         >
-          {"Creating Task"}
+          {!currentIdx ? "Creating Task" : "Update Task"}
         </Typography>
         <Grid container spacing={2}>
           <Grid item xs={9}>
@@ -121,7 +140,7 @@ const CreateTask = () => {
           size="large"
           type="submit"
         >
-          Submit
+          {currentIdx ? "Update" : "Create"}
         </Button>
       </Box>
     </Paper>

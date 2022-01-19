@@ -1,17 +1,91 @@
-import React from "react";
-import { Paper, CircularProgress, Box } from "@mui/material";
-import { useSelector } from "react-redux";
+import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { deleteTask } from "../../actions/taskAction";
+import { Paper, CircularProgress, Box, IconButton } from "@mui/material";
+import { Delete } from "@mui/icons-material";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
 
-const Tasks = () => {
+const tbRowStyle = {
+  "&:last-child td, &:last-child th": { border: 0 },
+};
+
+const tbcellStyle = {
+  "&:hover": {
+    cursor: "pointer",
+  },
+};
+
+const Tasks = ({ setCurrentIdx }) => {
+  const dispatch = useDispatch();
   const tasks = useSelector((state) => state.tasks);
   return !tasks.length ? (
     <CircularProgress />
   ) : (
-    <Paper sx={{ padding: "12px", gridRow: "span 7", margin: "4px" }}>
-      {tasks.map((task) => {
-        return <Box key={task._id}>{task.title}</Box>;
-      })}
-    </Paper>
+    <TableContainer
+      sx={{ padding: "12px", gridRow: "span 7", margin: "4px" }}
+      component={Paper}
+    >
+      <Table sx={{ minWidth: 650 }} aria-label="Bug List">
+        <TableHead>
+          <TableRow>
+            <TableCell>Title</TableCell>
+            <TableCell>Description</TableCell>
+            <TableCell>Creator</TableCell>
+            <TableCell>Priority</TableCell>
+            <TableCell>Delete</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {tasks.map((task) => (
+            <TableRow hover sx={tbRowStyle} key={task._id}>
+              <TableCell
+                sx={tbcellStyle}
+                onClick={() => {
+                  setCurrentIdx(task._id);
+                  console.log("clicked : " + task.title);
+                }}
+                component="th"
+                scope="row"
+              >
+                {task.title}
+              </TableCell>
+              <TableCell
+                sx={tbcellStyle}
+                onClick={() => {
+                  setCurrentIdx(task._id);
+                  console.log("clicked : " + task.title);
+                }}
+              >
+                {task.description}
+              </TableCell>
+              <TableCell>{task.creator}</TableCell>
+              <TableCell>{task.priority}</TableCell>
+              <TableCell>
+                <IconButton
+                  sx={{
+                    "&:hover": {
+                      background: "orange",
+                      color: "black",
+                    },
+                  }}
+                  onClick={() => {
+                    dispatch(deleteTask(task._id));
+                    console.log(task.title);
+                  }}
+                >
+                  <Delete />
+                </IconButton>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 };
 
