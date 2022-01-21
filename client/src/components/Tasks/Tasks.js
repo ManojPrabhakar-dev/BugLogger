@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { deleteTask } from "../../actions/taskAction";
-import { Paper, CircularProgress, Box, IconButton } from "@mui/material";
+import { Paper, CircularProgress, IconButton } from "@mui/material";
 import { Delete } from "@mui/icons-material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";

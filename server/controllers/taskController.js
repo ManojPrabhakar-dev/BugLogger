@@ -18,7 +18,7 @@ export const createTask = async (req, res) => {
 
   const newTask = new TaskInfo({
     ...task,
-    // creator: req.userId,
+    creatorID: req.userId,
     createdAt: new Date().toISOString(),
   });
 
@@ -35,11 +35,14 @@ export const updateTask = async (req, res) => {
   if (!mongoose.Types.ObjectId.isValid(id))
     return res.status(404).send(`No task with id: ${id}`);
 
-  const { title, description, creator, priority } = req.body;
+  const { title, description, assignee, creator, creatorID, priority } =
+    req.body;
   const updatedPost = {
     title,
     description,
+    assignee,
     creator,
+    creatorID,
     priority,
     _id: id,
   };
@@ -56,6 +59,11 @@ export const updateTask = async (req, res) => {
 
 export const deleteTask = async (req, res) => {
   const { id } = req.params;
-  await TaskInfo.findByIdAndDelete(id);
-  res.status(200).json("Deleted");
+  const item = await TaskInfo.findById(id);
+  if (item && item.creatorID === req.userID) {
+    await TaskInfo.findByIdAndDelete(id);
+    res.status(200).json("Deleted");
+  } else {
+    res.status(501).json("Unauthorized : Permission Denied");
+  }
 };
