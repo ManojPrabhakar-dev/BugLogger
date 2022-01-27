@@ -1,25 +1,18 @@
-import {
-  FETCH_ALL,
-  CREATE,
-  UPDATE,
-  DELETE,
-  LIKE,
-} from "../constants/actionTypes";
+import { FETCH_ALL, CREATE, UPDATE, DELETE } from "../constants/actionTypes";
 
-export const taskReducer = (posts = [], action) => {
+export const taskReducer = (tasks = [], action) => {
   switch (action.type) {
     case FETCH_ALL:
       return action.payload;
-    case UPDATE:
-    case LIKE:
-      return posts.map((post) =>
-        post._id === action.payload._id ? action.payload : post
-      );
     case CREATE:
-      return [...posts, action.payload];
+      return [...tasks, action.payload];
+    case UPDATE:
+      return tasks.map((task) =>
+        task._id === action.payload._id ? action.payload : task
+      );
     case DELETE:
-      return posts.filter((post) => post._id !== action.payload);
+      return tasks.filter((task) => task._id !== action.payload);
     default:
-      return posts;
+      return tasks;
   }
 };
