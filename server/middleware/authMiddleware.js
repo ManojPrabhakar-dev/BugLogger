@@ -2,9 +2,10 @@ import jwt from "jsonwebtoken";
 
 const secret = "mprabhak";
 
-const Auth = async((req, res, next) => {
+const Auth = async (req, res, next) => {
   try {
     const token = req.headers.authorization.split(" ")[1];
+    console.log("server token : " + token);
     const isCustomToken = token.length < 500;
     let decodedData;
     if (token && isCustomToken) {
@@ -18,6 +19,6 @@ const Auth = async((req, res, next) => {
   } catch (error) {
     console.log(error);
   }
-});
+};
 
 export default Auth;

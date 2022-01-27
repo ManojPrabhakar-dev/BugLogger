@@ -4,6 +4,7 @@ import { Box } from "@mui/material";
 import CreateTask from "./Form/CreateTask";
 import Tasks from "./Tasks/Tasks";
 import { getTaskList } from "../actions/taskAction";
+import NavBar from "./NavBar/NavBar";
 
 const layoutTop = {
   height: "100%",
@@ -22,6 +23,7 @@ const Home = () => {
   return (
     <Box sx={{ height: "100vh", width: "100%" }}>
       <Box sx={layoutTop}>
+        <NavBar />
         <CreateTask currentIdx={currentIdx} setCurrentIdx={setCurrentIdx} />
         <Tasks setCurrentIdx={setCurrentIdx} />
       </Box>

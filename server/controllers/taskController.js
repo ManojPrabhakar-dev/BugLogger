@@ -60,7 +60,7 @@ export const updateTask = async (req, res) => {
 export const deleteTask = async (req, res) => {
   const { id } = req.params;
   const item = await TaskInfo.findById(id);
-  if (item && item.creatorID === req.userID) {
+  if (item && item.creatorID === req.userId) {
     await TaskInfo.findByIdAndDelete(id);
     res.status(200).json("Deleted");
   } else {

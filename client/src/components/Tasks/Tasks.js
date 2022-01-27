@@ -23,6 +23,7 @@ const tbcellStyle = {
 const Tasks = ({ setCurrentIdx }) => {
   const dispatch = useDispatch();
   const tasks = useSelector((state) => state.tasks);
+  const user = JSON.parse(localStorage.getItem("profile"));
   return !tasks.length ? (
     <CircularProgress />
   ) : (
@@ -77,6 +78,7 @@ const Tasks = ({ setCurrentIdx }) => {
                     dispatch(deleteTask(task._id));
                     console.log(task.title);
                   }}
+                  disabled={user?.result?._id !== task.creatorID}
                 >
                   <Delete />
                 </IconButton>

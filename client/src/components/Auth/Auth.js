@@ -16,22 +16,23 @@ import { red } from "@mui/material/colors";
 import { signIn, signUp } from "../../actions/authAction";
 import { Visibility, VisibilityOff, Lock } from "@mui/icons-material/";
 
+const initialState = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+};
+
 const Auth = () => {
   const [isSignup, setIsSignup] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
-  const [user, setUser] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
+  const [user, setUser] = useState(initialState);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   function handleInputChange(e) {
     setUser({ ...user, [e.target.name]: e.target.value });
-    console.log(e.target.value);
   }
 
   function handleSubmit(e) {
@@ -42,6 +43,10 @@ const Auth = () => {
     } else {
       dispatch(signIn(navigate, user));
     }
+  }
+
+  function clearform() {
+    setUser(initialState);
   }
 
   return (

@@ -15,7 +15,7 @@ app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
 
 app.use("/tasks", taskRouter);
-app.use("/user", userRouter);
+app.use("/users", userRouter);
 
 const PORT = process.env.PORT || 5000;
 
