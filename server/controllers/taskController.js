@@ -15,7 +15,7 @@ export const getTasks = async (req, res) => {
 
 export const createTask = async (req, res) => {
   const task = req.body;
-
+  console.log("server task : " + JSON.stringify(task));
   const newTask = new TaskInfo({
     ...task,
     creatorID: req.userId,
@@ -26,6 +26,7 @@ export const createTask = async (req, res) => {
     await newTask.save();
     res.status(201).json(newTask);
   } catch (error) {
+    console.log("server error : " + JSON.stringify(error));
     res.status(409).json({ message: error.message });
   }
 };
