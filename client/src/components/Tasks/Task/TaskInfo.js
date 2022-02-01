@@ -108,100 +108,75 @@ const TaskInfo = ({ open, setOpen, taskInfo }) => {
           <Box
             sx={{
               gridColumn: "span 3",
-              display: "grid",
-              gridTemplateColumns: "repeat(12,1fr)",
-              gridTemplateRows: "repeat(3,1fr)",
-              alignItems: "center",
-              //   gap: 3,
+              display: "flex",
+              flexDirection: "column",
+              gap: 3,
             }}
           >
-            {/* <Box
-              sx={{
-                gridColumn: "span 4",
-                // display: "flex",
-                // alignItems: "center",
-                // justifyContent: "space-around",
-              }}
-            > */}
-            <Box
-              sx={{
-                gridRow: "1",
-                gridColumn: "span 4",
-                // backgroundColor: "red",
-              }}
-            >
-              <InputLabel id="demo-simple-select-label1">Type :</InputLabel>
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Box
+                sx={{
+                  flex: 4,
+                }}
+              >
+                <InputLabel id="demo-simple-select-label1">Type :</InputLabel>
+              </Box>
+              <Box sx={{ flex: 8, gridRow: "1", gridColumn: "span 8" }}>
+                <FormControl sx={{ width: 150 }}>
+                  <Select
+                    name="type"
+                    labelId="demo-simple-select-label1"
+                    id="demo-simple-select1"
+                    onChange={handleOnChange}
+                    defaultValue={"Bug"}
+                    displayEmpty
+                    inputProps={{ "aria-label": "Without label" }}
+                    size="small"
+                  >
+                    {types.map((type) => (
+                      <MenuItem key={type} value={type}>
+                        {type}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Box>
             </Box>
-            <Box sx={{ gridRow: "1", gridColumn: "span 8" }}>
-              <FormControl sx={{ width: 150 }}>
-                <Select
-                  name="type"
-                  labelId="demo-simple-select-label1"
-                  id="demo-simple-select1"
-                  // value={taskInfo.type}
-                  // label="type"
-                  onChange={handleOnChange}
-                  defaultValue={"Bug"}
-                  displayEmpty
-                  inputProps={{ "aria-label": "Without label" }}
-                  size="small"
-                >
-                  {types.map((type) => (
-                    <MenuItem key={type} value={type}>
-                      {type}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Box>
-            {/* </Box> */}
-            {/* <Box
-              sx={{
-                gridColumn: "span 8",
-                // display: "flex",
-                // alignItems: "center",
-                // justifyContent: "space-around",
-              }}
-            > */}
-            <Box
-              sx={{
-                gridRow: "2",
-                gridColumn: "span 4",
-                // backgroundColor: "blue",
-              }}
-            >
-              <InputLabel id="demo-simple-select-label2">
-                priority :{" "}
-              </InputLabel>
-            </Box>
-            <Box
-              sx={{
-                gridRow: "2",
-                gridColumn: "span 8",
-                // backgroundColor: "yellow",
-              }}
-            >
-              <FormControl sx={{ width: 150 }}>
-                <Select
-                  name="priority"
-                  labelId="demo-simple-select-label2"
-                  id="demo-simple-select2"
-                  // value={taskInfo.priority}
-                  //label="priority"
-                  onChange={handleOnChange}
-                  defaultValue={"Medium"}
-                  size="small"
-                >
-                  {priorityList.map((type) => (
-                    <MenuItem key={type} value={type}>
-                      {type}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Box
+                sx={{
+                  flex: 4,
+                }}
+              >
+                <InputLabel id="demo-simple-select-label2">
+                  priority :{" "}
+                </InputLabel>
+              </Box>
+              <Box
+                sx={{
+                  flex: 8,
+                }}
+              >
+                <FormControl sx={{ width: 150 }}>
+                  <Select
+                    name="priority"
+                    labelId="demo-simple-select-label2"
+                    id="demo-simple-select2"
+                    onChange={handleOnChange}
+                    defaultValue={"Medium"}
+                    size="small"
+                  >
+                    {priorityList.map((type) => (
+                      <MenuItem key={type} value={type}>
+                        {type}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Box>
             </Box>
           </Box>
-
           <Box
             sx={{
               gridColumn: "span 12",
