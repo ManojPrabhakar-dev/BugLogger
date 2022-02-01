@@ -29,25 +29,40 @@ const style = {
   p: 2,
 };
 
+const initialState = {
+  title: "",
+  description: "",
+  type: "Bug",
+  priority: "Medium",
+  creator: "",
+};
+
 const types = ["Task", "Bug", "Story", "Epic", "Improvement"];
 const priorityList = ["Critical", "High", "Medium", "Low"];
 
 const CreateBug = ({ open, setOpen }) => {
   const dispatch = useDispatch();
-  const handleOpen = () => setOpen(true);
+  // const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const [taskInfo, setTaskInfo] = useState({
-    type: "",
-    title: "",
-    description: "",
-    creator: "",
-    priority: "",
-  });
+  const [taskInfo, setTaskInfo] = useState(initialState);
 
   function postTaskInfoSubmit(e) {
     e.preventDefault();
-    dispatch(createTask(taskInfo));
-    clearState();
+    let updatedTask = { ...taskInfo };
+    const user = JSON.parse(localStorage.getItem("profile"));
+    if (user?.result) {
+      updatedTask = { ...taskInfo, creator: user?.result.name };
+      setTaskInfo(updatedTask);
+    }
+    dispatch(createTask(updatedTask));
+    console.log("taskInfo1 : " + JSON.stringify(updatedTask));
+    //clearState();
+
+    setTimeout(() => {
+      handleCancel();
+    }, 3000);
+
+    //Show success status and close
   }
 
   function handleOnChange(e) {
@@ -61,13 +76,7 @@ const CreateBug = ({ open, setOpen }) => {
   }
 
   function clearState() {
-    setTaskInfo({
-      type: "",
-      title: "",
-      description: "",
-      creator: "",
-      priority: "",
-    });
+    setTaskInfo(initialState);
   }
 
   return (

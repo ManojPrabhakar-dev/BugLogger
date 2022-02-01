@@ -17,7 +17,7 @@ import {
 } from "@mui/material";
 import { Task } from "@mui/icons-material";
 import { blue, blueGrey } from "@mui/material/colors";
-import { createTask, updateTask } from "../../../actions/taskAction";
+import { updateTask } from "../../../actions/taskAction";
 
 const style = {
   position: "absolute",
@@ -36,15 +36,30 @@ const types = ["Task", "Bug", "Story", "Epic", "Improvement"];
 const priorityList = ["Critical", "High", "Medium", "Low"];
 
 const TaskInfo = ({ open, setOpen, taskInfo }) => {
+  const dispatch = useDispatch();
+  const [task, setTask] = useState({});
   const handleClose = () => setOpen(false);
+
+  useEffect(() => {
+    setTask({ ...taskInfo });
+    console.log("task : " + JSON.stringify(taskInfo));
+  }, [taskInfo]);
+
   function handleOnChange(e) {
-    // setTaskInfo({ ...taskInfo, [e.target.name]: e.target.value });
+    setTask({ ...task, [e.target.name]: e.target.value });
     console.log(`name : ${e.target.name} , value : ${e.target.value}`);
   }
   function handleCancel() {
     // clearState();
     handleClose();
   }
+
+  function handleSubmit() {
+    console.log(`Task : ${JSON.stringify(task)}`);
+    dispatch(updateTask(task));
+    //show success alert
+  }
+
   return (
     <Modal
       open={open}
@@ -56,7 +71,7 @@ const TaskInfo = ({ open, setOpen, taskInfo }) => {
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <Task sx={{ fontSize: 32, color: blue[900] }} />
           <Typography variant="h4" sx={{ ml: "10px" }}>
-            {taskInfo.title}
+            {task.title}
           </Typography>
         </Box>
         <Divider sx={{ mx: 1, my: 2, backgroundColor: blueGrey[300] }} />
@@ -77,7 +92,7 @@ const TaskInfo = ({ open, setOpen, taskInfo }) => {
                   label="Summary"
                   fullWidth
                   size="small"
-                  value={taskInfo.title}
+                  value={task.title}
                   onChange={handleOnChange}
                 />
                 <TextField
@@ -88,7 +103,7 @@ const TaskInfo = ({ open, setOpen, taskInfo }) => {
                   size="small"
                   multiline
                   rows={4}
-                  value={taskInfo.description}
+                  value={task.description}
                   onChange={handleOnChange}
                 />
               </Box>
@@ -190,7 +205,6 @@ const TaskInfo = ({ open, setOpen, taskInfo }) => {
               variant="outlined"
               color="error"
               size="large"
-              type="submit"
               onClick={handleCancel}
             >
               Cancel
@@ -200,7 +214,7 @@ const TaskInfo = ({ open, setOpen, taskInfo }) => {
               variant="contained"
               color="primary"
               size="large"
-              type="submit"
+              onClick={handleSubmit}
             >
               Submit
             </Button>

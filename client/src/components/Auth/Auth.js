@@ -25,7 +25,7 @@ const initialState = {
 };
 
 const Auth = () => {
-  const [isSignup, setIsSignup] = useState(true);
+  const [isSignup, setIsSignup] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [user, setUser] = useState(initialState);
   const dispatch = useDispatch();
