@@ -14,6 +14,10 @@ import {
   MenuItem,
   OutlinedInput,
 } from "@mui/material";
+// import AdapterMoment from "@mui/lab/AdapterMoment";
+import DateAdapter from "@mui/lab/AdapterMoment";
+import { LocalizationProvider, DatePicker } from "@mui/lab";
+
 import { createTask, updateTask } from "../../actions/taskAction";
 
 const style = {
@@ -33,18 +37,34 @@ const initialState = {
   title: "",
   description: "",
   type: "Bug",
+  status: "Open",
   priority: "Medium",
   creator: "",
+  assignee: "unassigned",
+  dueDate: null,
 };
 
 const types = ["Task", "Bug", "Story", "Epic", "Improvement"];
 const priorityList = ["Critical", "High", "Medium", "Low"];
+let userList = ["unassigned"];
 
 const CreateBug = ({ open, setOpen }) => {
   const dispatch = useDispatch();
   // const handleOpen = () => setOpen(true);
+  // const [assignee, setAssignee] = useState("unassigned");
+  const [dueDate, setDueDate] = useState(null);
   const handleClose = () => setOpen(false);
   const [taskInfo, setTaskInfo] = useState(initialState);
+  const { users } = useSelector((state) => state.users);
+
+  useEffect(() => {
+    if (users) {
+      const userNames = users.map((user) => {
+        return user.name;
+      });
+      userList = ["unassigned", ...userNames];
+    }
+  }, [users]);
 
   function postTaskInfoSubmit(e) {
     e.preventDefault();
@@ -54,6 +74,11 @@ const CreateBug = ({ open, setOpen }) => {
       updatedTask = { ...taskInfo, creator: user?.result.name };
       setTaskInfo(updatedTask);
     }
+
+    if (dueDate) {
+      updatedTask = { ...updatedTask, dueDate: dueDate };
+    }
+
     dispatch(createTask(updatedTask));
     console.log("taskInfo1 : " + JSON.stringify(updatedTask));
     //clearState();
@@ -91,7 +116,7 @@ const CreateBug = ({ open, setOpen }) => {
           component="form"
           sx={{
             display: "grid",
-            gridTemplateRows: "repeat(7,1fr)",
+            gridTemplateRows: "repeat(9,1fr)",
             gap: 1,
             height: "100%",
             alignItems: "center",
@@ -172,6 +197,37 @@ const CreateBug = ({ open, setOpen }) => {
                 </MenuItem>
               ))}
             </Select>
+          </FormControl>
+
+          <FormControl sx={{ width: 150 }}>
+            <InputLabel id="assignee">Assignee </InputLabel>
+            <Select
+              name="assignee"
+              labelId="assignee1"
+              id="assignee1"
+              // value={taskInfo.priority}
+              label="assignee"
+              onChange={handleOnChange}
+              defaultValue={"unassigned"}
+              size="small"
+            >
+              {userList.map((user) => (
+                <MenuItem key={user} value={user}>
+                  {user}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl sx={{ width: 200 }}>
+            <LocalizationProvider dateAdapter={DateAdapter}>
+              <DatePicker
+                name="dueDate"
+                label="Due Date"
+                value={dueDate}
+                onChange={setDueDate}
+                renderInput={(params) => <TextField {...params} />}
+              />
+            </LocalizationProvider>
           </FormControl>
 
           <Box

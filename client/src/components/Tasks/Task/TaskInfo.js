@@ -15,6 +15,8 @@ import {
   OutlinedInput,
   Divider,
 } from "@mui/material";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import { LocalizationProvider, DatePicker } from "@mui/lab";
 import { Task } from "@mui/icons-material";
 import { blue, blueGrey } from "@mui/material/colors";
 import { updateTask } from "../../../actions/taskAction";
@@ -34,16 +36,29 @@ const style = {
 
 const types = ["Task", "Bug", "Story", "Epic", "Improvement"];
 const priorityList = ["Critical", "High", "Medium", "Low"];
+const statusList = ["Open", "Inprogress", "To be tested", "Closed"];
+let userList = ["unassigned"];
 
 const TaskInfo = ({ open, setOpen, taskInfo }) => {
   const dispatch = useDispatch();
   const [task, setTask] = useState({});
+  const [dueDate, setDueDate] = useState(null);
   const handleClose = () => setOpen(false);
+  const { users } = useSelector((state) => state.users);
 
   useEffect(() => {
+    if (users) {
+      const userNames = users.map((user) => {
+        return user.name;
+      });
+      userList = ["unassigned", ...userNames];
+    }
     setTask({ ...taskInfo });
+    if (taskInfo.dueDate) {
+      setDueDate(taskInfo.dueDate);
+    }
     console.log("task : " + JSON.stringify(taskInfo));
-  }, [taskInfo]);
+  }, [taskInfo, users]);
 
   function handleOnChange(e) {
     setTask({ ...task, [e.target.name]: e.target.value });
@@ -56,7 +71,12 @@ const TaskInfo = ({ open, setOpen, taskInfo }) => {
 
   function handleSubmit() {
     console.log(`Task : ${JSON.stringify(task)}`);
-    dispatch(updateTask(task));
+    let updatedTask = { ...task };
+    if (dueDate) {
+      updatedTask = { ...task, dueDate: dueDate };
+      setTask(updatedTask);
+    }
+    dispatch(updateTask(updatedTask));
     //show success alert
   }
 
@@ -134,6 +154,38 @@ const TaskInfo = ({ open, setOpen, taskInfo }) => {
                   flex: 4,
                 }}
               >
+                <InputLabel id="status1">Status :</InputLabel>
+              </Box>
+              <Box
+                sx={{
+                  flex: 8,
+                }}
+              >
+                <FormControl sx={{ width: 150 }}>
+                  <Select
+                    name="status"
+                    labelId="demo-simple-select-label2"
+                    id="demo-simple-select2"
+                    onChange={handleOnChange}
+                    defaultValue={task.status}
+                    size="small"
+                  >
+                    {statusList.map((status) => (
+                      <MenuItem key={status} value={status}>
+                        {status}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Box>
+            </Box>
+
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Box
+                sx={{
+                  flex: 4,
+                }}
+              >
                 <InputLabel id="demo-simple-select-label1">Type :</InputLabel>
               </Box>
               <Box sx={{ flex: 8, gridRow: "1", gridColumn: "span 8" }}>
@@ -143,7 +195,7 @@ const TaskInfo = ({ open, setOpen, taskInfo }) => {
                     labelId="demo-simple-select-label1"
                     id="demo-simple-select1"
                     onChange={handleOnChange}
-                    defaultValue={"Bug"}
+                    defaultValue={task.type}
                     displayEmpty
                     inputProps={{ "aria-label": "Without label" }}
                     size="small"
@@ -164,9 +216,7 @@ const TaskInfo = ({ open, setOpen, taskInfo }) => {
                   flex: 4,
                 }}
               >
-                <InputLabel id="demo-simple-select-label2">
-                  priority :{" "}
-                </InputLabel>
+                <InputLabel id="priority1">priority :</InputLabel>
               </Box>
               <Box
                 sx={{
@@ -179,7 +229,7 @@ const TaskInfo = ({ open, setOpen, taskInfo }) => {
                     labelId="demo-simple-select-label2"
                     id="demo-simple-select2"
                     onChange={handleOnChange}
-                    defaultValue={"Medium"}
+                    defaultValue={task.priority}
                     size="small"
                   >
                     {priorityList.map((type) => (
@@ -189,6 +239,65 @@ const TaskInfo = ({ open, setOpen, taskInfo }) => {
                     ))}
                   </Select>
                 </FormControl>
+              </Box>
+            </Box>
+
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Box
+                sx={{
+                  flex: 4,
+                }}
+              >
+                <InputLabel id="demo-simple-select-label2">
+                  Assignee :
+                </InputLabel>
+              </Box>
+              <Box
+                sx={{
+                  flex: 8,
+                }}
+              >
+                <FormControl sx={{ width: 150 }}>
+                  <Select
+                    name="assignee"
+                    labelId="demo-simple-select-label2"
+                    id="demo-simple-select2"
+                    onChange={handleOnChange}
+                    defaultValue={task.assignee}
+                    size="small"
+                  >
+                    {userList.map((user) => (
+                      <MenuItem key={user} value={user}>
+                        {user}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Box>
+            </Box>
+
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Box
+                sx={{
+                  flex: 4,
+                }}
+              >
+                <InputLabel id="Due Date">Due Date :</InputLabel>
+              </Box>
+              <Box
+                sx={{
+                  flex: 8,
+                }}
+              >
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <DatePicker
+                    name="dueDate"
+                    // label="Due Date"
+                    value={dueDate}
+                    onChange={setDueDate}
+                    renderInput={(params) => <TextField {...params} />}
+                  />
+                </LocalizationProvider>
               </Box>
             </Box>
           </Box>

@@ -5,6 +5,16 @@ import bcrypt from "bcryptjs";
 
 const secret = "mprabhak";
 
+export const getUsers = async (req, res) => {
+  try {
+    const users = await UserModel.find();
+
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+};
+
 export const signUp = async (req, res) => {
   try {
     const { firstName, lastName, email, password } = req.body;

@@ -36,8 +36,17 @@ export const updateTask = async (req, res) => {
   if (!mongoose.Types.ObjectId.isValid(id))
     return res.status(404).send(`No task with id: ${id}`);
 
-  const { title, description, assignee, creator, creatorID, priority } =
-    req.body;
+  const {
+    title,
+    description,
+    assignee,
+    creator,
+    creatorID,
+    priority,
+    status,
+    type,
+    dueDate,
+  } = req.body;
   const updatedPost = {
     title,
     description,
@@ -45,6 +54,9 @@ export const updateTask = async (req, res) => {
     creator,
     creatorID,
     priority,
+    status,
+    type,
+    dueDate,
     _id: id,
   };
 

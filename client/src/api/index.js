@@ -20,5 +20,6 @@ export const updateTask = (id, task) => api.patch(`/tasks/${id}`, task);
 
 export const deleteTask = (id) => api.delete(`/tasks/${id}`);
 
+export const getUsers = () => api.get("/users");
 export const signIn = (userData) => api.post(`/users/signIn`, userData);
 export const signUp = (userData) => api.post(`/users/signUp`, userData);

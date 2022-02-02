@@ -18,6 +18,7 @@ import Divider from "@mui/material/Divider";
 import { Dashboard, ViewKanban, Chat } from "@mui/icons-material";
 import Tasks from "../components/Tasks/Tasks";
 import { getTaskList } from "../actions/taskAction";
+import { getUserList } from "../actions/userAction";
 import {
   red,
   green,
@@ -70,6 +71,7 @@ const HomePage = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getTaskList());
+    dispatch(getUserList());
   }, [dispatch]);
 
   const handleListItemClick = (event, index) => {
