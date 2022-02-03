@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  Avatar,
   Modal,
   TextField,
   Button,
@@ -18,8 +19,10 @@ import {
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import { LocalizationProvider, DatePicker } from "@mui/lab";
 import { Task } from "@mui/icons-material";
-import { blue, blueGrey } from "@mui/material/colors";
+import { blue, blueGrey, deepPurple } from "@mui/material/colors";
 import { updateTask } from "../../../actions/taskAction";
+import { stringToColor } from "../../../util/helperFunction";
+import moment from "moment";
 
 const style = {
   position: "absolute",
@@ -42,6 +45,7 @@ let userList = ["unassigned"];
 const TaskInfo = ({ open, setOpen, taskInfo }) => {
   const dispatch = useDispatch();
   const [task, setTask] = useState({});
+  const [createdAt, setCreatedAt] = useState("");
   const [dueDate, setDueDate] = useState(null);
   const handleClose = () => setOpen(false);
   const { users } = useSelector((state) => state.users);
@@ -57,6 +61,16 @@ const TaskInfo = ({ open, setOpen, taskInfo }) => {
     if (taskInfo.dueDate) {
       setDueDate(taskInfo.dueDate);
     }
+
+    if (taskInfo.createdAt) {
+      console.log("created At " + taskInfo.createdAt);
+      const dateObj = new Date(taskInfo.createdAt);
+      const momentObj = moment(dateObj);
+      // var momentString = momentObj.format("YYYY-MM-DD");
+      // console.log("Moment String : " + momentObj.fromNow());
+      setCreatedAt(momentObj.fromNow());
+    }
+
     console.log("task : " + JSON.stringify(taskInfo));
   }, [taskInfo, users]);
 
@@ -94,38 +108,46 @@ const TaskInfo = ({ open, setOpen, taskInfo }) => {
             {task.title}
           </Typography>
         </Box>
-        <Divider sx={{ mx: 1, my: 2, backgroundColor: blueGrey[300] }} />
+        <Divider sx={{ mx: 1, mt: 2, mb: 1, backgroundColor: blueGrey[300] }} />
+
         <Box sx={{ display: "grid", gridTemplateColumns: "repeat(12,1fr)" }}>
           <Box sx={{ gridColumn: "span 9" }}>
             <Box sx={{ display: "flex" }}>
-              <Box
-                sx={{
-                  display: "flex",
-                  flex: 1,
-                  flexDirection: "column",
-                  gap: 3,
-                }}
-              >
-                <TextField
-                  name="title"
-                  variant="outlined"
-                  label="Summary"
-                  fullWidth
-                  size="small"
-                  value={task.title}
-                  onChange={handleOnChange}
-                />
-                <TextField
-                  name="description"
-                  variant="outlined"
-                  label="Description"
-                  fullWidth
-                  size="small"
-                  multiline
-                  rows={4}
-                  value={task.description}
-                  onChange={handleOnChange}
-                />
+              <Box sx={{ display: "flex", flex: 1, flexDirection: "column" }}>
+                <Typography
+                  sx={{ ml: 1, mb: 2, color: "gray" }}
+                  variant="subtitle1"
+                >{`created by ${task.creator} - ${createdAt}`}</Typography>
+
+                <Box
+                  sx={{
+                    display: "flex",
+                    flex: 1,
+                    flexDirection: "column",
+                    gap: 3,
+                  }}
+                >
+                  <TextField
+                    name="title"
+                    variant="outlined"
+                    label="Summary"
+                    fullWidth
+                    size="small"
+                    value={task.title}
+                    onChange={handleOnChange}
+                  />
+                  <TextField
+                    name="description"
+                    variant="outlined"
+                    label="Description"
+                    fullWidth
+                    size="small"
+                    multiline
+                    rows={4}
+                    value={task.description}
+                    onChange={handleOnChange}
+                  />
+                </Box>
               </Box>
               <Box>
                 <Divider
@@ -268,7 +290,25 @@ const TaskInfo = ({ open, setOpen, taskInfo }) => {
                   >
                     {userList.map((user) => (
                       <MenuItem key={user} value={user}>
-                        {user}
+                        <Box
+                          sx={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            gap: 1,
+                          }}
+                        >
+                          <Avatar
+                            sx={{
+                              bgcolor: stringToColor(user),
+                              width: 24,
+                              height: 24,
+                            }}
+                          >
+                            {user.charAt(0).toUpperCase()}
+                          </Avatar>
+                          <Typography variant="body1">{user}</Typography>
+                        </Box>
                       </MenuItem>
                     ))}
                   </Select>
