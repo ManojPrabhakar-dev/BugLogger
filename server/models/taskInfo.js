@@ -14,6 +14,8 @@ const taskSchema = mongoose.Schema({
     type: Date,
     default: new Date(),
   },
+  filePath: { type: String },
+  fileMimeType: { type: String },
 });
 
 const TaskInfo = mongoose.model("TaskInfo", taskSchema);

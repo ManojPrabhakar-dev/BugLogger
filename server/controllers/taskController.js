@@ -15,12 +15,20 @@ export const getTasks = async (req, res) => {
 
 export const createTask = async (req, res) => {
   const task = req.body;
-  console.log("server task : " + JSON.stringify(task));
-  const newTask = new TaskInfo({
+  const { path, mimetype } = req.file;
+  let updatedTask = {
     ...task,
     creatorID: req.userId,
     createdAt: new Date().toISOString(),
-  });
+  };
+
+  if (path) {
+    console.log(`filePath: ${path} fileMimeType: ${mimetype}`);
+    updatedTask = { ...updatedTask, filePath: path, fileMimeType: mimetype };
+  }
+
+  console.log("server task : " + JSON.stringify(updatedTask));
+  const newTask = new TaskInfo(updatedTask);
 
   try {
     await newTask.save();

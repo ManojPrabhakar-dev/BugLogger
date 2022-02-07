@@ -29,7 +29,7 @@ export const getTaskList = () => async (dispatch) => {
 
 export const createTask = (task) => async (dispatch) => {
   try {
-    const { data: taskInfo } = await api.postTask(task);
+    const { data: taskInfo } = await api.postTaskDetails(task);
 
     dispatch({ type: CREATE, payload: taskInfo });
   } catch (error) {

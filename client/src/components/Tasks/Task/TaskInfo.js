@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Avatar,
@@ -23,6 +23,8 @@ import { blue, blueGrey, deepPurple } from "@mui/material/colors";
 import { updateTask } from "../../../actions/taskAction";
 import { stringToColor } from "../../../util/helperFunction";
 import moment from "moment";
+import Dropzone from "react-dropzone";
+import "./taskInfo.css";
 
 const style = {
   position: "absolute",
@@ -45,6 +47,13 @@ let userList = ["unassigned"];
 const TaskInfo = ({ open, setOpen, taskInfo }) => {
   const dispatch = useDispatch();
   const [task, setTask] = useState({});
+
+  const [file, setFile] = useState(null);
+  const [previewSrc, setPreviewSrc] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
+  const [isPreviewAvailable, setIsPreviewAvailable] = useState(false); // state to show preview only for images
+  const dropRef = useRef(); // React ref for managing the hover state of droppable area
+
   const [createdAt, setCreatedAt] = useState("");
   const [dueDate, setDueDate] = useState(null);
   const handleClose = () => setOpen(false);
@@ -83,7 +92,19 @@ const TaskInfo = ({ open, setOpen, taskInfo }) => {
     handleClose();
   }
 
-  function handleSubmit() {
+  const onDrop = (files) => {
+    const [uploadedFile] = files;
+    setFile(uploadedFile);
+
+    const fileReader = new FileReader();
+    fileReader.onload = () => {
+      setPreviewSrc(fileReader.result);
+    };
+    fileReader.readAsDataURL(uploadedFile);
+    setIsPreviewAvailable(uploadedFile.name.match(/\.(jpeg|jpg|png)$/));
+  };
+
+  async function handleSubmit() {
     console.log(`Task : ${JSON.stringify(task)}`);
     let updatedTask = { ...task };
     if (dueDate) {
@@ -92,7 +113,28 @@ const TaskInfo = ({ open, setOpen, taskInfo }) => {
     }
     dispatch(updateTask(updatedTask));
     //show success alert
+    // if (file) {
+    //   const formData = new FormData();
+    //   formData.append("file", file);
+
+    //   setErrorMsg("");
+    //   await axios.post(`${API_URL}/upload`, formData, {
+    //     headers: {
+    //       "Content-Type": "multipart/form-data",
+    //     },
+    //   });
+    // } else {
+    //   setErrorMsg("Please select a file to add.");
+    // }
   }
+
+  const updateBorder = (dragState) => {
+    if (dragState === "over") {
+      dropRef.current.style.border = "2px solid #000";
+    } else if (dragState === "leave") {
+      dropRef.current.style.border = "2px dashed #e9ebeb";
+    }
+  };
 
   return (
     <Modal
@@ -147,6 +189,49 @@ const TaskInfo = ({ open, setOpen, taskInfo }) => {
                     value={task.description}
                     onChange={handleOnChange}
                   />
+                  <div className="upload-section">
+                    <Dropzone
+                      onDrop={onDrop}
+                      onDragEnter={() => updateBorder("over")}
+                      onDragLeave={() => updateBorder("leave")}
+                    >
+                      {({ getRootProps, getInputProps }) => (
+                        <div
+                          {...getRootProps({ className: "drop-zone" })}
+                          ref={dropRef}
+                        >
+                          <input {...getInputProps()} />
+                          <p>
+                            Drag and drop a file OR click here to select a file
+                          </p>
+                          {file && (
+                            <div>
+                              <strong>Selected file:</strong> {file.name}
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </Dropzone>
+                    {previewSrc ? (
+                      isPreviewAvailable ? (
+                        <div className="image-preview">
+                          <img
+                            className="preview-image"
+                            src={previewSrc}
+                            alt="Preview"
+                          />
+                        </div>
+                      ) : (
+                        <div className="preview-message">
+                          <p>No preview available for this file</p>
+                        </div>
+                      )
+                    ) : (
+                      <div className="preview-message">
+                        <p>Image preview will be shown here after selection</p>
+                      </div>
+                    )}
+                  </div>
                 </Box>
               </Box>
               <Box>

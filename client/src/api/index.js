@@ -15,6 +15,12 @@ api.interceptors.request.use((req) => {
 export const getTasks = () => api.get("/tasks");
 
 export const postTask = (task) => api.post("/tasks", task);
+export const postTaskDetails = (task) =>
+  api.post("/tasks", task, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
 
 export const updateTask = (id, task) => api.patch(`/tasks/${id}`, task);
 

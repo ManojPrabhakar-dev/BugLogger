@@ -1,0 +1,44 @@
+.upload-section {
+    display      : flex;
+    height       : 200px;
+    margin-bottom: 10px;
+}
+
+.upload-section>div {
+    width: 50%;
+}
+
+.drop-zone {
+    margin-bottom  : 10px;
+    padding        : 40px 10px;
+    height         : inherit;
+    border         : 2px dashed #e9ebeb;
+    display        : flex;
+    flex-direction : column;
+    justify-content: center;
+    align-items    : center;
+    cursor         : pointer;
+}
+
+.drop-zone:focus {
+    outline: none;
+}
+
+.image-preview {
+    height     : inherit;
+    margin-left: 5%;
+}
+
+.preview-image {
+    width        : 100%;
+    height       : inherit;
+    display      : block;
+    margin-bottom: 10px;
+}
+
+.preview-message {
+    display        : flex;
+    justify-content: center;
+    align-items    : center;
+    margin-left    : 5%;
+}
