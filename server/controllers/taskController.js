@@ -1,5 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
+import * as path from "path";
+const __dirname = path.resolve();
 
 import TaskInfo from "../models/taskInfo.js";
 
@@ -36,6 +38,22 @@ export const createTask = async (req, res) => {
   } catch (error) {
     console.log("server error : " + JSON.stringify(error));
     res.status(409).json({ message: error.message });
+  }
+};
+
+export const downloadFile = async (req, res) => {
+  try {
+    console.log("in Download file");
+    const { id } = req.params;
+    const item = await TaskInfo.findById(id);
+    res.set({
+      "Content-Type": item.fileMimeType,
+    });
+    const filepath = path.join(__dirname, item.filePath);
+    console.log("filepath = " + filepath);
+    res.sendFile(filepath);
+  } catch (error) {
+    res.status(400).send("Error while downloading file. Try again later.");
   }
 };
 

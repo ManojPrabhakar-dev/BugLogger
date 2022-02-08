@@ -7,6 +7,7 @@ import {
   UPDATE,
   DELETE,
 } from "../constants/actionTypes";
+import download from "downloadjs";
 
 export const getTaskList = () => async (dispatch) => {
   try {
@@ -32,6 +33,17 @@ export const createTask = (task) => async (dispatch) => {
     const { data: taskInfo } = await api.postTaskDetails(task);
 
     dispatch({ type: CREATE, payload: taskInfo });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const downloadAttachedFile = (task) => async (dispatch) => {
+  try {
+    const { data } = await api.downloadFile(task);
+    const split = task.filePath.split("/");
+    const fileName = split[split.length - 1];
+    return download(data, fileName, task.fileMimeType);
   } catch (error) {
     console.log(error);
   }

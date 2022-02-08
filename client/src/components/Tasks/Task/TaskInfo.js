@@ -20,7 +20,7 @@ import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import { LocalizationProvider, DatePicker } from "@mui/lab";
 import { Task } from "@mui/icons-material";
 import { blue, blueGrey, deepPurple } from "@mui/material/colors";
-import { updateTask } from "../../../actions/taskAction";
+import { updateTask, downloadAttachedFile } from "../../../actions/taskAction";
 import { stringToColor } from "../../../util/helperFunction";
 import moment from "moment";
 import Dropzone from "react-dropzone";
@@ -113,19 +113,6 @@ const TaskInfo = ({ open, setOpen, taskInfo }) => {
     }
     dispatch(updateTask(updatedTask));
     //show success alert
-    // if (file) {
-    //   const formData = new FormData();
-    //   formData.append("file", file);
-
-    //   setErrorMsg("");
-    //   await axios.post(`${API_URL}/upload`, formData, {
-    //     headers: {
-    //       "Content-Type": "multipart/form-data",
-    //     },
-    //   });
-    // } else {
-    //   setErrorMsg("Please select a file to add.");
-    // }
   }
 
   const updateBorder = (dragState) => {
@@ -189,49 +176,66 @@ const TaskInfo = ({ open, setOpen, taskInfo }) => {
                     value={task.description}
                     onChange={handleOnChange}
                   />
-                  <div className="upload-section">
-                    <Dropzone
-                      onDrop={onDrop}
-                      onDragEnter={() => updateBorder("over")}
-                      onDragLeave={() => updateBorder("leave")}
-                    >
-                      {({ getRootProps, getInputProps }) => (
-                        <div
-                          {...getRootProps({ className: "drop-zone" })}
-                          ref={dropRef}
-                        >
-                          <input {...getInputProps()} />
-                          <p>
-                            Drag and drop a file OR click here to select a file
-                          </p>
-                          {file && (
-                            <div>
-                              <strong>Selected file:</strong> {file.name}
-                            </div>
-                          )}
-                        </div>
-                      )}
-                    </Dropzone>
-                    {previewSrc ? (
-                      isPreviewAvailable ? (
-                        <div className="image-preview">
-                          <img
-                            className="preview-image"
-                            src={previewSrc}
-                            alt="Preview"
-                          />
-                        </div>
+                  {taskInfo.filePath ? (
+                    <div className="fileDownloadContainer">
+                      <button
+                        className="attachedFile cardShawdow"
+                        onClick={() => {
+                          console.log(`${taskInfo.filePath.split(`\\`)[1]}`);
+                          dispatch(downloadAttachedFile(taskInfo));
+                        }}
+                      >
+                        {taskInfo.filePath.split(`\\`)[1]}
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="upload-section">
+                      <Dropzone
+                        onDrop={onDrop}
+                        onDragEnter={() => updateBorder("over")}
+                        onDragLeave={() => updateBorder("leave")}
+                      >
+                        {({ getRootProps, getInputProps }) => (
+                          <div
+                            {...getRootProps({ className: "drop-zone" })}
+                            ref={dropRef}
+                          >
+                            <input {...getInputProps()} />
+                            <p>
+                              Drag and drop a file OR click here to select a
+                              file
+                            </p>
+                            {file && (
+                              <div>
+                                <strong>Selected file:</strong> {file.name}
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </Dropzone>
+                      {previewSrc ? (
+                        isPreviewAvailable ? (
+                          <div className="image-preview">
+                            <img
+                              className="preview-image"
+                              src={previewSrc}
+                              alt="Preview"
+                            />
+                          </div>
+                        ) : (
+                          <div className="preview-message">
+                            <p>No preview available for this file</p>
+                          </div>
+                        )
                       ) : (
                         <div className="preview-message">
-                          <p>No preview available for this file</p>
+                          <p>
+                            Image preview will be shown here after selection
+                          </p>
                         </div>
-                      )
-                    ) : (
-                      <div className="preview-message">
-                        <p>Image preview will be shown here after selection</p>
-                      </div>
-                    )}
-                  </div>
+                      )}
+                    </div>
+                  )}
                 </Box>
               </Box>
               <Box>

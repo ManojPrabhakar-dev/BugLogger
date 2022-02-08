@@ -22,6 +22,11 @@ export const postTaskDetails = (task) =>
     },
   });
 
+export const downloadFile = (task) =>
+  api.get(`/tasks/download/${task._id}`, {
+    responseType: "blob",
+  });
+
 export const updateTask = (id, task) => api.patch(`/tasks/${id}`, task);
 
 export const deleteTask = (id) => api.delete(`/tasks/${id}`);
