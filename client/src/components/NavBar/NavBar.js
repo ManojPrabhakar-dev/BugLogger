@@ -33,7 +33,7 @@ export default function NavBar() {
       }
     }
     // setUser(JSON.parse(localStorage.getItem("profile")));
-  }, [location]);
+  }, []);
 
   const handleChange = (event) => {
     // setAuth(event.target.checked);
@@ -59,7 +59,7 @@ export default function NavBar() {
   };
 
   return (
-    <Box sx={{ display: "flex", flexGrow: 1 }}>
+    <Box sx={{ display: "flex", flex: 1, width: "100%", height: "60px" }}>
       <AppBar
         position="static"
         sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}

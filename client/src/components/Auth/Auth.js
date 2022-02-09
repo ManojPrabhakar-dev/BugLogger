@@ -12,7 +12,6 @@ import {
   InputAdornment,
   IconButton,
 } from "@mui/material";
-import { red } from "@mui/material/colors";
 import { signIn, signUp } from "../../actions/authAction";
 import { Visibility, VisibilityOff, Lock } from "@mui/icons-material/";
 
@@ -45,9 +44,9 @@ const Auth = () => {
     }
   }
 
-  function clearform() {
-    setUser(initialState);
-  }
+  // function clearform() {
+  //   setUser(initialState);
+  // }
 
   return (
     <Container

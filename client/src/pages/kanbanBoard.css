@@ -1,0 +1,36 @@
+.kanban_layout {
+    flex           : 5;
+    display        : flex;
+    justify-content: center;
+}
+
+.kanban_column {
+    display       : flex;
+    flex-direction: column;
+    margin        : 20px;
+    flex          : 1;
+}
+
+.kanban_column h3 {
+    text-align   : center;
+    margin-bottom: 20px;
+}
+
+.kanban_item_container {
+    display         : flex;
+    flex-direction  : column;
+    padding         : 10px;
+    background-color: #ddd9d9;
+    flex            : 1;
+    margin-bottom   : 20px;
+    gap             : 10px;
+    border-radius   : 2px;
+}
+
+.kanban_task_item {
+    height          : 100px;
+    width           : 100%;
+    padding         : 20px;
+    border-radius   : 5px;
+    background-color: #3ba5b8;
+}
