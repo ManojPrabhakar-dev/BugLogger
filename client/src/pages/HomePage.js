@@ -18,6 +18,7 @@ import Divider from "@mui/material/Divider";
 import { Dashboard, ViewKanban, Chat } from "@mui/icons-material";
 import Tasks from "../components/Tasks/Tasks";
 import { getTaskList } from "../actions/taskAction";
+import { getUserList } from "../actions/userAction";
 import {
   red,
   green,
@@ -28,9 +29,21 @@ import {
 } from "@mui/material/colors";
 import CreateBug from "../components/Form/CreateBug";
 
-const BugCard = ({ count, type, color }) => {
+const BugCard = ({ count, type, color, category, setCategory }) => {
   return (
-    <Paper sx={{ backgroundColor: color[200], borderRadius: 3 }}>
+    <Paper
+      sx={{
+        backgroundColor: color[200],
+        borderRadius: 3,
+        "&:hover": {
+          cursor: "pointer",
+          backgroundColor: color[400],
+        },
+      }}
+      onClick={() => {
+        setCategory(category);
+      }}
+    >
       <Box
         sx={{
           display: "flex",
@@ -65,11 +78,13 @@ const BugCard = ({ count, type, color }) => {
 
 const HomePage = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [category, setCategory] = useState("open");
 
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getTaskList());
+    dispatch(getUserList());
   }, [dispatch]);
 
   const handleListItemClick = (event, index) => {
@@ -149,12 +164,47 @@ const HomePage = () => {
             gap: 8,
           }}
         >
-          <BugCard color={orange} count={24} type={"Open Bugs"} />
-          <BugCard color={green} count={13} type={"Closed Bugs"} />
-          <BugCard color={purple} count={2} type={"Due Today"} />
-          <BugCard color={blue} count={24} type={"Due in 7 Days"} />
-          <BugCard color={red} count={24} type={"Overdue"} />
-          <BugCard color={blueGrey} count={10} type={"Unassigned"} />
+          <BugCard
+            color={orange}
+            count={24}
+            type={"Open Bugs"}
+            category={"open"}
+            setCategory={setCategory}
+          />
+          <BugCard
+            color={green}
+            count={13}
+            type={"Closed Bugs"}
+            category={"inprogress"}
+            setCategory={setCategory}
+          />
+          <BugCard
+            color={purple}
+            category={"open"}
+            count={2}
+            type={"Due Today"}
+            setCategory={setCategory}
+          />
+          <BugCard
+            color={blue}
+            category={"open"}
+            count={24}
+            type={"Due in 7 Days"}
+            setCategory={setCategory}
+          />
+          <BugCard
+            color={red}
+            category={"open"}
+            count={24}
+            type={"Overdue"}
+            setCategory={setCategory}
+          />
+          <BugCard
+            color={blueGrey}
+            count={10}
+            type={"Unassigned"}
+            setCategory
+          />
         </Box>
         <Box
           sx={{
@@ -173,7 +223,7 @@ const HomePage = () => {
               Create Bug
             </Button>
           </Box>
-          <Tasks />
+          <Tasks category={category} />
         </Box>
       </Box>
     </Box>

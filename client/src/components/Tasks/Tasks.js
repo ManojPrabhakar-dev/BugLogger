@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { deleteTask } from "../../actions/taskAction";
 import { Paper, CircularProgress, IconButton, Typography } from "@mui/material";
@@ -31,13 +31,32 @@ const cardStyle = {
   m: 1,
 };
 
-const Tasks = () => {
+const Tasks = ({ category }) => {
   const [open, setOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState({});
+  const [filteredTask, setFilteredTask] = useState([]);
   const dispatch = useDispatch();
   const taskState = useSelector((state) => state.tasks);
   const { loading, error, tasks } = taskState;
   const user = JSON.parse(localStorage.getItem("profile"));
+
+  useEffect(() => {
+    if (tasks) {
+      let categoryTasks = [];
+      const _category = category.toLowerCase();
+      if (_category === "open") {
+        categoryTasks = tasks.filter(
+          (task) => task.status.toLowerCase() === _category
+        );
+      } else if (_category === "inprogress") {
+        categoryTasks = tasks.filter(
+          (task) => task.status.toLowerCase() === _category
+        );
+      }
+      setFilteredTask(categoryTasks);
+    }
+  }, [category, tasks]);
+
   return (
     <>
       {loading ? (
@@ -48,7 +67,7 @@ const Tasks = () => {
         <Paper sx={cardStyle}>
           <Typography>{error}</Typography>
         </Paper>
-      ) : tasks.length === 0 ? (
+      ) : filteredTask.length === 0 ? (
         <Paper sx={cardStyle}>
           <Typography variant="h6">No Items Found</Typography>
         </Paper>
@@ -69,7 +88,7 @@ const Tasks = () => {
             </TableHead>
             <TableBody>
               <TaskInfo open={open} setOpen={setOpen} taskInfo={selectedTask} />
-              {tasks.map((task) => (
+              {filteredTask.map((task) => (
                 <TableRow hover sx={tbRowStyle} key={task._id}>
                   <TableCell
                     sx={tbcellStyle}

@@ -1,5 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
+import * as path from "path";
+const __dirname = path.resolve();
 
 import TaskInfo from "../models/taskInfo.js";
 
@@ -15,12 +17,20 @@ export const getTasks = async (req, res) => {
 
 export const createTask = async (req, res) => {
   const task = req.body;
-  console.log("server task : " + JSON.stringify(task));
-  const newTask = new TaskInfo({
+  const { path, mimetype } = req.file;
+  let updatedTask = {
     ...task,
     creatorID: req.userId,
     createdAt: new Date().toISOString(),
-  });
+  };
+
+  if (path) {
+    console.log(`filePath: ${path} fileMimeType: ${mimetype}`);
+    updatedTask = { ...updatedTask, filePath: path, fileMimeType: mimetype };
+  }
+
+  console.log("server task : " + JSON.stringify(updatedTask));
+  const newTask = new TaskInfo(updatedTask);
 
   try {
     await newTask.save();
@@ -31,13 +41,38 @@ export const createTask = async (req, res) => {
   }
 };
 
+export const downloadFile = async (req, res) => {
+  try {
+    console.log("in Download file");
+    const { id } = req.params;
+    const item = await TaskInfo.findById(id);
+    res.set({
+      "Content-Type": item.fileMimeType,
+    });
+    const filepath = path.join(__dirname, item.filePath);
+    console.log("filepath = " + filepath);
+    res.sendFile(filepath);
+  } catch (error) {
+    res.status(400).send("Error while downloading file. Try again later.");
+  }
+};
+
 export const updateTask = async (req, res) => {
   const { id } = req.params;
   if (!mongoose.Types.ObjectId.isValid(id))
     return res.status(404).send(`No task with id: ${id}`);
 
-  const { title, description, assignee, creator, creatorID, priority } =
-    req.body;
+  const {
+    title,
+    description,
+    assignee,
+    creator,
+    creatorID,
+    priority,
+    status,
+    type,
+    dueDate,
+  } = req.body;
   const updatedPost = {
     title,
     description,
@@ -45,6 +80,9 @@ export const updateTask = async (req, res) => {
     creator,
     creatorID,
     priority,
+    status,
+    type,
+    dueDate,
     _id: id,
   };
 

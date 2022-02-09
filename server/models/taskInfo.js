@@ -7,11 +7,15 @@ const taskSchema = mongoose.Schema({
   creator: { type: String, required: true },
   creatorID: { type: String, required: true },
   assignee: { type: String, default: "unassigned" },
-  // TaskType: { type: String, default: "Task" },
+  type: { type: String, default: "Task" },
+  status: { type: String, default: "Open" },
+  dueDate: { type: Date },
   createdAt: {
     type: Date,
     default: new Date(),
   },
+  filePath: { type: String },
+  fileMimeType: { type: String },
 });
 
 const TaskInfo = mongoose.model("TaskInfo", taskSchema);
