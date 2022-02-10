@@ -6,20 +6,17 @@ import {
   TextField,
   Button,
   Typography,
-  Paper,
   Box,
-  Grid,
   FormControl,
   InputLabel,
   Select,
   MenuItem,
-  OutlinedInput,
   Divider,
 } from "@mui/material";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import { LocalizationProvider, DatePicker } from "@mui/lab";
 import { Task } from "@mui/icons-material";
-import { blue, blueGrey, deepPurple } from "@mui/material/colors";
+import { blue, blueGrey } from "@mui/material/colors";
 import { updateTask, downloadAttachedFile } from "../../../actions/taskAction";
 import { stringToColor } from "../../../util/helperFunction";
 import moment from "moment";
@@ -50,7 +47,6 @@ const TaskInfo = ({ open, setOpen, taskInfo }) => {
 
   const [file, setFile] = useState(null);
   const [previewSrc, setPreviewSrc] = useState("");
-  const [errorMsg, setErrorMsg] = useState("");
   const [isPreviewAvailable, setIsPreviewAvailable] = useState(false); // state to show preview only for images
   const dropRef = useRef(); // React ref for managing the hover state of droppable area
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Paper, CircularProgress, Typography } from "@mui/material";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { updateTask } from "../actions/taskAction";
 import "./kanbanBoard.css";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { v4 as uuid } from "uuid";
@@ -28,7 +29,7 @@ const columnsFromBackend = {
   },
 };
 
-const onDragEnd = (result, columns, setColumns) => {
+const onDragEnd = (result, columns, setColumns, dispatch) => {
   if (!result.destination) return;
   const { source, destination } = result;
   const sourceColumn = columns[source.droppableId];
@@ -42,6 +43,9 @@ const onDragEnd = (result, columns, setColumns) => {
     const destItems = [...destColumn.items];
     const [removed] = sourceItems.splice(source.index, 1);
     destItems.splice(destination.index, 0, removed);
+    const updatedStatus = { ...removed, status: destColumn.name };
+    dispatch(updateTask(updatedStatus));
+    console.log(`updated Task : ${JSON.stringify(updatedStatus)}`);
     setColumns({
       ...columns,
       [source.droppableId]: {
@@ -80,6 +84,7 @@ function KanbanBoard() {
   const [columns, setColumns] = useState(columnsFromBackend);
   const taskState = useSelector((state) => state.tasks);
   const { loading, error, tasks } = taskState;
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (tasks) {
@@ -111,7 +116,9 @@ function KanbanBoard() {
       ) : (
         <div className="kanban_layout">
           <DragDropContext
-            onDragEnd={(result) => onDragEnd(result, columns, setColumns)}
+            onDragEnd={(result) =>
+              onDragEnd(result, columns, setColumns, dispatch)
+            }
           >
             {Object.entries(columns).map(([columnId, column], index) => {
               return (
