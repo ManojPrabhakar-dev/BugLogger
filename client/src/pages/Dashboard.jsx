@@ -1,13 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { Button, Typography, Paper, Box } from "@mui/material";
-import NavBar from "../components/NavBar/NavBar";
-import List from "@mui/material/List";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-
 import Tasks from "../components/Tasks/Tasks";
 import { getTaskList } from "../actions/taskAction";
 import { getUserList } from "../actions/userAction";
@@ -68,24 +61,16 @@ const BugCard = ({ count, type, color, category, setCategory }) => {
   );
 };
 
-const HomePage = () => {
-  const [selectedIndex, setSelectedIndex] = useState(0);
+const Dashboard = () => {
   const [open, setOpen] = useState(false);
   const [category, setCategory] = useState("open");
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(getTaskList());
     dispatch(getUserList());
   }, [dispatch]);
-
-  const handleListItemClick = (event, index, route) => {
-    setSelectedIndex(index);
-    console.log(route);
-    navigate(`/${route}`);
-  };
 
   const handleCreateBug = () => {
     setOpen(true);
@@ -170,4 +155,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default Dashboard;

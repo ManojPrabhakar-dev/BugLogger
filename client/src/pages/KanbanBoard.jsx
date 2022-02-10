@@ -1,25 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { Paper, CircularProgress, Typography } from "@mui/material";
+import { useSelector } from "react-redux";
 import "./kanbanBoard.css";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { v4 as uuid } from "uuid";
 
-const itemsFromBackend = [
-  { id: uuid(), content: "First task" },
-  { id: uuid(), content: "Second task" },
-  { id: uuid(), content: "Third task" },
-  { id: uuid(), content: "Fourth task" },
-  { id: uuid(), content: "Fifth task" },
-];
-
 const columnsFromBackend = {
   [uuid()]: {
     index: 1,
-    name: "BackLog",
-    items: itemsFromBackend,
+    name: "Open",
+    items: [],
   },
   [uuid()]: {
     index: 2,
-    name: "To do",
+    name: "Inprogress",
     items: [],
   },
   [uuid()]: {
@@ -74,96 +68,111 @@ const onDragEnd = (result, columns, setColumns) => {
   }
 };
 
+const cardStyle = {
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  height: "100%",
+  m: 1,
+};
+
 function KanbanBoard() {
   const [columns, setColumns] = useState(columnsFromBackend);
+  const taskState = useSelector((state) => state.tasks);
+  const { loading, error, tasks } = taskState;
+
+  useEffect(() => {
+    if (tasks) {
+      for (let colId in columnsFromBackend) {
+        const colInfo = columnsFromBackend[colId];
+        const task_category = tasks.filter(
+          (task) => task.status === colInfo.name
+        );
+        colInfo.items = [...task_category];
+      }
+      setColumns({ ...columnsFromBackend });
+    }
+  }, [tasks]);
+
   return (
-    <div className="kanban_layout">
-      <DragDropContext
-        onDragEnd={(result) => onDragEnd(result, columns, setColumns)}
-      >
-        {Object.entries(columns).map(([columnId, column], index) => {
-          return (
-            <div className="kanban_column" key={columnId}>
-              <h3>{column.name}</h3>
-              <Droppable droppableId={columnId} key={columnId}>
-                {(provided, snapshot) => {
-                  return (
-                    <div
-                      {...provided.droppableProps}
-                      ref={provided.innerRef}
-                      className="kanban_item_container"
-                      style={{
-                        background: snapshot.isDraggingOver
-                          ? "lightblue"
-                          : "lightgrey",
-                      }}
-                    >
-                      {column.items.map((item, index) => {
-                        return (
-                          <Draggable
-                            key={item.id}
-                            draggableId={item.id}
-                            index={index}
-                          >
-                            {(provided, snapshot) => {
-                              return (
-                                <div
-                                  ref={provided.innerRef}
-                                  {...provided.draggableProps}
-                                  {...provided.dragHandleProps}
-                                  className="kanban_task_item"
-                                  style={{
-                                    userSelect: "none",
-                                    backgroundColor: snapshot.isDragging
-                                      ? "#263B4A"
-                                      : "#456C86",
-                                    color: "white",
-                                    ...provided.draggableProps.style,
-                                  }}
-                                >
-                                  {item.content}
-                                </div>
-                              );
-                            }}
-                          </Draggable>
-                        );
-                      })}
-                      {provided.placeholder}
-                    </div>
-                  );
-                }}
-              </Droppable>
-            </div>
-          );
-        })}
-      </DragDropContext>
-    </div>
+    <>
+      {loading ? (
+        <Paper sx={cardStyle}>
+          <CircularProgress />
+        </Paper>
+      ) : error ? (
+        <Paper sx={cardStyle}>
+          <Typography>{error}</Typography>
+        </Paper>
+      ) : tasks.length === 0 ? (
+        <Paper sx={cardStyle}>
+          <Typography variant="h6">No Items Found</Typography>
+        </Paper>
+      ) : (
+        <div className="kanban_layout">
+          <DragDropContext
+            onDragEnd={(result) => onDragEnd(result, columns, setColumns)}
+          >
+            {Object.entries(columns).map(([columnId, column], index) => {
+              return (
+                <div className="kanban_column" key={columnId}>
+                  <h3>{column.name}</h3>
+                  <Droppable droppableId={columnId} key={columnId}>
+                    {(provided, snapshot) => {
+                      return (
+                        <div
+                          {...provided.droppableProps}
+                          ref={provided.innerRef}
+                          className="kanban_item_container"
+                          style={{
+                            background: snapshot.isDraggingOver
+                              ? "lightblue"
+                              : "lightgrey",
+                          }}
+                        >
+                          {column.items.map((item, index) => {
+                            return (
+                              <Draggable
+                                key={item._id}
+                                draggableId={item._id}
+                                index={index}
+                              >
+                                {(provided, snapshot) => {
+                                  return (
+                                    <div
+                                      ref={provided.innerRef}
+                                      {...provided.draggableProps}
+                                      {...provided.dragHandleProps}
+                                      className="kanban_task_item"
+                                      style={{
+                                        userSelect: "none",
+                                        backgroundColor: snapshot.isDragging
+                                          ? "#263B4A"
+                                          : "#456C86",
+                                        color: "white",
+                                        ...provided.draggableProps.style,
+                                      }}
+                                    >
+                                      {item.title}
+                                    </div>
+                                  );
+                                }}
+                              </Draggable>
+                            );
+                          })}
+                          {provided.placeholder}
+                        </div>
+                      );
+                    }}
+                  </Droppable>
+                </div>
+              );
+            })}
+          </DragDropContext>
+        </div>
+      )}
+    </>
   );
 }
-
-const KanbanBoard1 = () => {
-  return (
-    <div className="kanban_layout">
-      <div className="kanban_column">
-        <h3>BackLog</h3>
-        <div className="kanban_item_container">
-          <div className="kanban_task_item">Task 1</div>
-          <div className="kanban_task_item">Task 2</div>
-          <div className="kanban_task_item">Task 3</div>
-        </div>
-      </div>
-      <div className="kanban_column">
-        <h3>In Progress</h3>
-        <div className="kanban_item_container">
-          <div className="kanban_task_item">Task 1</div>
-        </div>
-      </div>
-      <div className="kanban_column">
-        <h3>Done</h3>
-        <div className="kanban_item_container"></div>
-      </div>
-    </div>
-  );
-};
 
 export default KanbanBoard;
