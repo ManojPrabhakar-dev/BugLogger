@@ -38,7 +38,7 @@ const style = {
 
 const types = ["Task", "Bug", "Story", "Epic", "Improvement"];
 const priorityList = ["Critical", "High", "Medium", "Low"];
-const statusList = ["Open", "Inprogress", "To be tested", "Closed"];
+const statusList = ["Open", "Inprogress", "In Review", "Done"];
 let userList = ["unassigned"];
 
 const TaskInfo = ({ open, setOpen, taskInfo }) => {

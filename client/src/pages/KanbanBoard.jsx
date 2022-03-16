@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Paper, CircularProgress, Typography } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { updateTask } from "../actions/taskAction";
+import TaskInfo from "../components/Tasks/Task/TaskInfo";
 import "./kanbanBoard.css";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { v4 as uuid } from "uuid";
+import moment from "moment";
 
 const columnsFromBackend = {
   [uuid()]: {
@@ -19,7 +21,7 @@ const columnsFromBackend = {
   },
   [uuid()]: {
     index: 3,
-    name: "In Progress",
+    name: "In Review",
     items: [],
   },
   [uuid()]: {
@@ -45,7 +47,7 @@ const onDragEnd = (result, columns, setColumns, dispatch) => {
     destItems.splice(destination.index, 0, removed);
     const updatedStatus = { ...removed, status: destColumn.name };
     dispatch(updateTask(updatedStatus));
-    console.log(`updated Task : ${JSON.stringify(updatedStatus)}`);
+    // console.log(`updated Task : ${JSON.stringify(updatedStatus)}`);
     setColumns({
       ...columns,
       [source.droppableId]: {
@@ -81,6 +83,8 @@ const cardStyle = {
 };
 
 function KanbanBoard() {
+  const [open, setOpen] = useState(false);
+  const [selectedTask, setSelectedTask] = useState({});
   const [columns, setColumns] = useState(columnsFromBackend);
   const taskState = useSelector((state) => state.tasks);
   const { loading, error, tasks } = taskState;
@@ -115,6 +119,7 @@ function KanbanBoard() {
         </Paper>
       ) : (
         <div className="kanban_layout">
+          <TaskInfo open={open} setOpen={setOpen} taskInfo={selectedTask} />
           <DragDropContext
             onDragEnd={(result) =>
               onDragEnd(result, columns, setColumns, dispatch)
@@ -130,7 +135,7 @@ function KanbanBoard() {
                         <div
                           {...provided.droppableProps}
                           ref={provided.innerRef}
-                          className="kanban_item_container"
+                          className="kanban_item_wrapper"
                           style={{
                             background: snapshot.isDraggingOver
                               ? "lightblue"
@@ -150,17 +155,31 @@ function KanbanBoard() {
                                       ref={provided.innerRef}
                                       {...provided.draggableProps}
                                       {...provided.dragHandleProps}
-                                      className="kanban_task_item"
+                                      className="kanban_task_item_container"
                                       style={{
                                         userSelect: "none",
-                                        backgroundColor: snapshot.isDragging
-                                          ? "#263B4A"
-                                          : "#456C86",
-                                        color: "white",
+                                        border: snapshot.isDragging
+                                          ? "1px solid #0d415f"
+                                          : "none",
                                         ...provided.draggableProps.style,
                                       }}
+                                      onClick={() => {
+                                        setSelectedTask(item);
+                                        console.log("item clicked");
+                                      }}
                                     >
-                                      {item.title}
+                                      <span className="taskTitle">
+                                        {item.title}
+                                      </span>
+                                      {getChip(item.priority)}
+                                      <div className="footerWrapper">
+                                        <span className="creatorText">
+                                          {item.creator}
+                                        </span>
+                                        <span className="creatorAt">
+                                          {moment(item.createdAt).fromNow()}
+                                        </span>
+                                      </div>
                                     </div>
                                   );
                                 }}
@@ -179,6 +198,22 @@ function KanbanBoard() {
         </div>
       )}
     </>
+  );
+}
+
+function getChip(text) {
+  let color = "#555";
+  if (text === "Medium") {
+    color = "#d1841f";
+  } else if (text === "Critical" || text === "High") {
+    color = "#db3e3e";
+  } else if (text === "Low") {
+    color = "#117fb3";
+  }
+  return (
+    <div className="chipStyle" style={{ backgroundColor: color }}>
+      {text}
+    </div>
   );
 }
 

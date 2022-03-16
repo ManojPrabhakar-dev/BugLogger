@@ -5,10 +5,11 @@
 }
 
 .kanban_column {
-    display       : flex;
-    flex-direction: column;
-    margin        : 20px;
-    flex          : 1;
+    display          : flex;
+    flex-direction   : column;
+    margin           : 20px;
+    min-width        : 230px;
+    /* flex          : 1; */
 }
 
 .kanban_column h3 {
@@ -16,7 +17,7 @@
     margin-bottom: 20px;
 }
 
-.kanban_item_container {
+.kanban_item_wrapper {
     display         : flex;
     flex-direction  : column;
     padding         : 10px;
@@ -27,10 +28,40 @@
     border-radius   : 2px;
 }
 
-.kanban_task_item {
-    height          : 100px;
-    width           : 100%;
-    padding         : 20px;
-    border-radius   : 5px;
-    background-color: #3ba5b8;
+.kanban_task_item_container {
+    /* height          : 100px; */
+    width              : 100%;
+    padding            : 10px;
+    border-radius      : 5px;
+    background-color   : #f6f8f8;
+    display            : flex;
+    flex-direction     : column;
+    gap                : 10px;
+    /* cursor          : pointer; */
+}
+
+.taskTitle {
+    font-weight: 600;
+}
+
+.chipStyle {
+    padding                  : 3px 5px;
+    /* margin-right          : 3px; */
+    border-radius            : 20px;
+    width                    : fit-content;
+    font-size                : 12px;
+    /* font-weight           : bold; */
+}
+
+.footerWrapper {
+    display        : flex;
+    justify-content: space-between;
+    /* margin      : 5px 10px; */
+}
+
+.creatorText,
+.creatorAt {
+    font-weight: 400;
+    color      : #555;
+    font-size  : 12px;
 }
